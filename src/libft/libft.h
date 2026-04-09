@@ -3,22 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msolet-l <msolet-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: masolet- <masolet-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/05 14:49:55 by msolet-l          #+#    #+#             */
-/*   Updated: 2025/03/06 16:30:13 by msolet-l         ###   ########.fr       */
+/*   Created: 2025/11/17 10:50:39 by masolet-          #+#    #+#             */
+/*   Updated: 2026/03/24 15:59:37 by masolet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
+# include <limits.h>
 # include <stdarg.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
-# endif
 
 typedef struct s_list
 {
@@ -26,18 +25,10 @@ typedef struct s_list
 	struct s_list	*next;
 }					t_list;
 
-int					ft_printf(const char *txt, ...);
-int					ft_ltoa_hexa_size(unsigned long long nb);
-char				*ft_ltoa_hexa(unsigned long long n, char format);
-int					ft_utoa_size(long nb);
-char				*ft_utoa(unsigned int n);
-char				*printf_s(const char *src);
-char				*printf_p(long n);
-void				ft_put_and_free(char *argc, int *len);
-void				ft_putlen(const char *c, int i, int *len);
-int					ft_putstr_fd2(char *s, int fd);
-void				ft_printc(char c, int fd, int *len);
-int					ft_putchar_fd2(char c, int fd);
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1024
+# endif
+
 char				*ft_strchr(const char *s, int c);
 char				*ft_strrchr(const char *s, int c);
 char				*ft_strnstr(const char *haystack, const char *needle,
@@ -84,10 +75,20 @@ void				*ft_memcpy(void *dest, const void *src, size_t n);
 void				*ft_memmove(void *dest, const void *src, size_t n);
 void				*ft_memchr(const void *s, int c, size_t n);
 void				*ft_calloc(size_t nmemb, size_t size);
+
+void				ft_printf_c(char c, int fd, int *len);
+char				*ft_printf_s(const char *src);
+char				*ft_printf_p(long n);
+int					ft_putstr_fd2(char *s, int fd);
+int					ft_putchar_fd2(char c, int fd);
+void				ft_putlen(const char *c, int i, int *len);
+void				ft_put_and_free(char *argc, int *len);
+int					ft_ltoa_hexa_size(unsigned long long nb);
+char				*ft_ltoa_hexa(unsigned long long n, char format);
+int					ft_utoa_size(long nb);
+char				*ft_utoa(unsigned int n);
+int					ft_printf(const char *txt, ...);
+
 char				*get_next_line(int fd);
-char				*ft_line_cleaner(t_list **s);
-int					ft_strchr2(const t_list *s, int c);
-t_list				*ft_lstlast(t_list *lst);
-int					ft_strjoinlst(t_list **s1, char const *s2);
 
 #endif

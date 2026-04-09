@@ -3,16 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msolet-l <msolet-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: masolet- <masolet-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/28 14:52:23 by msolet-l          #+#    #+#             */
-/*   Updated: 2024/10/28 17:54:51 by msolet-l         ###   ########.fr       */
+/*   Created: 2025/11/19 14:50:01 by masolet-          #+#    #+#             */
+/*   Updated: 2025/11/24 16:59:13 by masolet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*printf_p(long n)
+void	ft_printf_c(char c, int fd, int *len)
+{
+	if (ft_putchar_fd2(c, fd) != -1 && *len >= 0)
+		(*len)++;
+	else
+		(*len) = -1;
+}
+
+char	*ft_printf_s(const char *src)
+{
+	char	*dest;
+
+	if (src == NULL)
+		dest = ft_strdup("(null)");
+	else
+		dest = ft_strdup(src);
+	return (dest);
+}
+
+char	*ft_printf_p(long n)
 {
 	char	*dest;
 	char	*last;
@@ -29,42 +48,14 @@ char	*printf_p(long n)
 	return (dest);
 }
 
-char	*printf_s(const char *src)
-{
-	char	*dest;
-
-	if (src == NULL)
-		dest = ft_strdup("(null)");
-	else
-		dest = ft_strdup(src);
-	return (dest);
-}
-
-void	ft_printc(char c, int fd, int *len)
-{
-	if (ft_putchar_fd2(c, fd) != -1 && *len >= 0)
-		(*len)++;
-	else
-		(*len) = -1;
-}
-
 int	ft_putstr_fd2(char *s, int fd)
 {
-	size_t	i;
-	size_t	len;
-
 	if (!s)
 		return (-1);
-	i = 0;
-	len = ft_strlen(s);
-	len = write(fd, s, len);
-	return (len);
+	return (write(fd, s, ft_strlen(s)));
 }
 
-void	ft_putlen(const char *c, int i, int *len)
+int	ft_putchar_fd2(char c, int fd)
 {
-	if (write(1, &c[i], 1) == -1)
-		(*len) = -1;
-	else if (len >= 0)
-		(*len)++;
+	return (write(fd, &c, 1));
 }

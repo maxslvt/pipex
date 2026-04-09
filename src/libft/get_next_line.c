@@ -3,119 +3,125 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msolet-l <msolet-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: masolet- <masolet-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/06 16:25:52 by msolet-l          #+#    #+#             */
-/*   Updated: 2025/03/06 16:26:08 by msolet-l         ###   ########.fr       */
+/*   Created: 2025/11/18 14:29:58 by masolet-          #+#    #+#             */
+/*   Updated: 2025/12/04 15:45:59 by masolet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_strjoinlst(t_list **s1, char const *s2)
+static char	*read_to_stash(int fd, char *line, char *stash, ssize_t *n)
+{
+	char	*tmp;
+
+	*n = 1;
+	stash[0] = '\0';
+	while (!ft_strchr(stash, '\n'))
+	{
+		if (stash[0])
+		{
+			tmp = line;
+			line = ft_strjoin(line, stash);
+			free(tmp);
+			if (!line)
+				return (NULL);
+		}
+		*n = read(fd, stash, BUFFER_SIZE);
+		if (*n < 0)
+			return (free(line), NULL);
+		stash[*n] = '\0';
+		if (*n == 0)
+			break ;
+	}
+	return (line);
+}
+
+static char	*extract_from_stash(char *line, char *stash)
 {
 	size_t	i;
-	t_list	*temp;
-	char	*jsp;
+	size_t	j;
+	char	*line_tmp;
+	char	*tmp;
 
 	i = 0;
-	while (*s1 && (*s1)->next != NULL)
-		s1 = &(*s1)->next;
-	while (s2 && s2[i])
+	j = 0;
+	tmp = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	if (!tmp)
+		return (free(line), NULL);
+	while (stash[i])
 	{
-		jsp = malloc(sizeof(char));
-		if (!jsp)
-			return (0);
-		jsp[0] = s2[i];
-		temp = ft_lstnew(jsp);
-		if (!temp)
-			return (0);
-		if (*s1)
-			(*s1)->next = temp;
-		else
-			(*s1) = temp;
-		s1 = &(*s1)->next;
-		i++;
+		tmp[j++] = stash[i];
+		if (stash[i++] == '\n')
+			break ;
 	}
-	return (1);
-}
-
-t_list	*ft_lstlast(t_list *lst)
-{
-	if (lst)
-	{
-		while (lst->next)
-			lst = lst->next;
-	}
-	return (lst);
-}
-
-int	ft_strchr2(const t_list *s, int c)
-{
-	int	i;
-
-	i = 0;
-	if (!s)
-		return (-1);
-	while (s)
-	{
-		if (*(char *)s->content == (char)c)
-			return (i);
-		i++;
-		s = s->next;
-	}
-	return (-1);
-}
-
-char	*ft_line_cleaner(t_list **s)
-{
-	int		len;
-	char	*line;
-	int		i;
-	t_list	*temp;
-
-	len = ft_strchr2(*s, '\n') + 1;
-	if (len <= 0)
-		len = ft_lstsize(*s);
-	line = malloc(len + 1);
+	line_tmp = line;
+	line = ft_strjoin(line, tmp);
+	(free(line_tmp), free(tmp), j = 0);
 	if (!line)
 		return (NULL);
-	i = 0;
-	while (*s != NULL && i < len)
-	{
-		line[i++] = *(char *)(*s)->content;
-		temp = (*s);
-		*s = (*s)->next;
-		free(temp->content);
-		free(temp);
-	}
-	line[len] = '\0';
+	while (stash[i])
+		stash[j++] = stash[i++];
+	stash[j] = '\0';
 	return (line);
+}
+
+static char	*fill_line(int fd, char *line, char *stash)
+{
+	ssize_t	n;
+
+	line = read_to_stash(fd, line, stash, &n);
+	if (!line)
+		return (NULL);
+	if (n >= 0)
+		line = extract_from_stash(line, stash);
+	if (!line || line[0] == '\0')
+	{
+		free(line);
+		return (NULL);
+	}
+	return (line);
+}
+
+static void	clean_stash(char *stash)
+{
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	j = 0;
+	while (stash[i] && stash[i] != '\n')
+		i++;
+	if (stash[i] == '\n')
+		i++;
+	while (stash[i])
+		stash[j++] = stash[i++];
+	stash[j] = '\0';
 }
 
 char	*get_next_line(int fd)
 {
-	char			*buff;
-	static t_list	*stash;
-	long long		n;
+	static char	stash[BUFFER_SIZE + 1];
+	char		*line;
+	size_t		i;
 
-	if (!stash)
-		stash = NULL;
-	buff = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (!buff)
+	line = ft_calloc(ft_strlen(stash) + 1, sizeof(char));
+	if (!line)
 		return (NULL);
-	n = 1;
-	while ((ft_strchr2(stash, '\n') == -1) && n > 0)
+	if (stash[0])
 	{
-		n = read(fd, buff, BUFFER_SIZE);
-		if (n <= 0)
-			break ;
-		buff[n] = '\0';
-		if (!ft_strjoinlst(&stash, buff))
-			return (NULL);
+		i = 0;
+		while (stash[i] && stash[i] != '\n')
+		{
+			line[i] = stash[i];
+			i++;
+		}
+		if (stash[i] == '\n')
+			line[i] = stash[i];
 	}
-	free(buff);
-	if (stash == NULL)
-		return (NULL);
-	return (ft_line_cleaner(&stash));
+	if (ft_strchr(line, '\n'))
+		return (clean_stash(stash), line);
+	line = fill_line(fd, line, stash);
+	return (line);
 }

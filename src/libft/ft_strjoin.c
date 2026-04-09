@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msolet-l <msolet-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: masolet- <masolet-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/05 14:48:28 by msolet-l          #+#    #+#             */
-/*   Updated: 2024/01/22 18:50:54 by msolet-l         ###   ########.fr       */
+/*   Created: 2025/11/17 12:07:40 by masolet-          #+#    #+#             */
+/*   Updated: 2025/11/19 14:01:44 by masolet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	i = 0;
 	j = 0;
 	while (s1[i])
-	{
-		dest[j++] = s1[i];
-		i++;
-	}
+		dest[j++] = s1[i++];
 	i = 0;
 	while (s2[i])
-	{
-		dest[j++] = s2[i];
-		i++;
-	}
-	dest[j] = 0;
+		dest[j++] = s2[i++];
+	dest[j] = '\0';
 	return (dest);
 }

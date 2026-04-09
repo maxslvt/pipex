@@ -3,66 +3,61 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msolet-l <msolet-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: masolet- <masolet-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/28 14:53:08 by msolet-l          #+#    #+#             */
-/*   Updated: 2024/10/28 17:54:38 by msolet-l         ###   ########.fr       */
+/*   Created: 2025/11/19 14:50:09 by masolet-          #+#    #+#             */
+/*   Updated: 2025/11/24 17:08:32 by masolet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*printf_p(long n)
+void	ft_putlen(const char *c, int i, int *len)
 {
-	char	*dest;
-	char	*last;
-
-	if (n == 0)
-		return (ft_strdup("(nil)"));
-	last = ft_ltoa_hexa(n, 'x');
-	dest = ft_strjoin("0x", last);
-	free(last);
-	return (dest);
+	if (write(1, &c[i], 1) == -1)
+		(*len) = -1;
+	else if (*len >= 0)
+		(*len)++;
 }
 
 void	ft_put_and_free(char *argc, int *len)
 {
-	ft_putstr_fd(argc, 1);
-	*len += ft_strlen((const char *)argc);
-	free(argc);
+	if (argc)
+	{
+		if (ft_putstr_fd2(argc, 1) != -1 && *len >= 0)
+			*len += ft_strlen((const char *)argc);
+		else
+			*len = -1;
+		free(argc);
+	}
 }
 
-void	ft_putlen(const char *c, int i, int *len)
+static int	ft_get_str(const char *format, int i, int *len, va_list *ap)
 {
-	write(1, &c[i], 1);
-	(*len)++;
-}
-
-int	ft_get_str(const char *format, int i, int *len, va_list *ap)
-{
+	char	c;
 	char	*argc;
 
 	argc = NULL;
-	if (format[i + 1] == 'c')
-		(ft_putchar_fd(va_arg(*ap, int), 1), (*len)++);
-	else if (format[i + 1] == '%')
-		argc = ft_strdup("%");
-	else if (format[i + 1] == 's')
-		argc = printf_s(va_arg(*ap, const char *));
-	else if (format[i + 1] == 'x' || format[i + 1] == 'X')
-		argc = ft_ltoa_hexa(va_arg(*ap, unsigned int), format[i + 1]);
-	else if (format[i + 1] == 'p')
-		argc = printf_p(va_arg(*ap, unsigned long long));
-	else if (format[i + 1] == 'd' || format[i + 1] == 'i')
-		argc = ft_itoa(va_arg(*ap, int));
-	else if (format[i + 1] == 'u')
-		argc = ft_utoa(va_arg(*ap, unsigned int));
-	else if (format[i + 1])
-		argc = ft_substr(format, i, 2);
-	else
+	c = format[i + 1];
+	if (!c)
 		return (0);
-	if (argc)
-		ft_put_and_free(argc, len);
+	if (c == 'c')
+		ft_printf_c(va_arg(*ap, int), 1, len);
+	else if (c == '%')
+		argc = ft_strdup("%");
+	else if (c == 's')
+		argc = ft_printf_s(va_arg(*ap, const char *));
+	else if (c == 'x' || c == 'X')
+		argc = ft_ltoa_hexa(va_arg(*ap, unsigned int), c);
+	else if (c == 'p')
+		argc = ft_printf_p(va_arg(*ap, unsigned long long));
+	else if (c == 'd' || c == 'i')
+		argc = ft_itoa(va_arg(*ap, int));
+	else if (c == 'u')
+		argc = ft_utoa(va_arg(*ap, unsigned int));
+	else
+		argc = ft_substr(format, i, 2);
+	ft_put_and_free(argc, len);
 	return (1);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msolet-l <msolet-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: masolet- <masolet-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/05 14:46:59 by msolet-l          #+#    #+#             */
-/*   Updated: 2024/01/24 14:40:59 by msolet-l         ###   ########.fr       */
+/*   Created: 2025/11/17 11:27:30 by masolet-          #+#    #+#             */
+/*   Updated: 2025/11/24 16:42:13 by masolet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@ void	*ft_memmove(void *dst, const void *src, size_t len)
 {
 	size_t	i;
 
-	if (!dst && !src)
-		return (0);
+	if (!dst || !src)
+		return (NULL);
 	i = 0;
-	if ((size_t)dst - (size_t)src < len)
+	if (((size_t)dst - (size_t)src) < len)
 	{
 		i = len - 1;
 		while (i < len)

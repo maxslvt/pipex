@@ -3,42 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msolet-l <msolet-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: masolet- <masolet-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/10 12:06:06 by msolet-l          #+#    #+#             */
-/*   Updated: 2025/03/10 12:16:41 by msolet-l         ###   ########.fr       */
+/*   Created: 2026/04/09 11:49:43 by masolet-          #+#    #+#             */
+/*   Updated: 2026/04/09 11:49:53 by masolet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
-
-# include "libft/libft.h"
-# include <errno.h>
+# include "./libft/libft.h"
 # include <fcntl.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <sys/wait.h>
+# include <string.h>
 # include <unistd.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <errno.h>
 
-typedef struct s_pipex
-{
-	pid_t	pid1;
-	pid_t	pid2;
-	int		tube[2];
-	int		infile;
-	int		outfile;
-	char	*paths;
-	char	**cmd_paths;
-	char	**cmd_args;
-	char	*cmd;
-}			t_pipex;
-
-void		ft_free_tab(char **tab);
-char		*ft_get_cmd_path(char **paths, char **cmd, char **envp);
-char		*ft_find_path(char **env);
-void		ft_err_exit(char *msg, char *arg);
-char		**ft_token(char const *s, char c);
-char		*ft_strtrimtoken(char *str);
+void	ft_error(char *str);
+int		open_file(char *file, int in_or_out);
+void	ft_free_tab(char **tab);
+char	**get_env_path(char **envp);
+char	*get_path(char *cmd, char **env);
+void	exec(char *cmd, char **env);
+void	child(char **av, int *p_fd, char **env);
+void	child2(char **av, int *p_fd, char **env);
 
 #endif

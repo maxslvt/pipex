@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msolet-l <msolet-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: masolet- <masolet-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/05 14:47:16 by msolet-l          #+#    #+#             */
-/*   Updated: 2024/01/22 18:51:18 by msolet-l         ###   ########.fr       */
+/*   Created: 2025/11/17 12:13:18 by masolet-          #+#    #+#             */
+/*   Updated: 2025/11/18 11:25:14 by masolet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,8 @@
 
 void	ft_putendl_fd(char *s, int fd)
 {
-	size_t	i;
-
 	if (!s)
 		return ;
-	i = 0;
-	while (s[i])
-		write(fd, &s[i++], 1);
+	write(fd, s, ft_strlen(s));
 	write(fd, "\n", 1);
 }

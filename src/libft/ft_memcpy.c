@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msolet-l <msolet-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: masolet- <masolet-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/05 14:46:54 by msolet-l          #+#    #+#             */
-/*   Updated: 2024/01/24 14:41:01 by msolet-l         ###   ########.fr       */
+/*   Created: 2025/11/17 11:24:17 by masolet-          #+#    #+#             */
+/*   Updated: 2025/11/24 16:42:01 by masolet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 	size_t	i;
 
 	if (!dst && !src)
-		return (0);
+		return (NULL);
 	i = 0;
 	while (i < n)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_conversions.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msolet-l <msolet-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: masolet- <masolet-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/28 14:53:26 by msolet-l          #+#    #+#             */
-/*   Updated: 2024/10/28 17:55:04 by msolet-l         ###   ########.fr       */
+/*   Created: 2025/11/19 14:50:12 by masolet-          #+#    #+#             */
+/*   Updated: 2025/11/24 16:33:07 by masolet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,23 +27,23 @@ int	ft_ltoa_hexa_size(unsigned long long nb)
 
 char	*ft_ltoa_hexa(unsigned long long n, char format)
 {
-	size_t				nlen;
-	char				*res;
-	unsigned long long	num;
+	size_t	nlen;
+	char	*res;
 
 	if (n == 0)
 		return (ft_strdup("0"));
-	num = n;
-	nlen = ft_ltoa_hexa_size(num);
+	nlen = ft_ltoa_hexa_size(n);
 	res = ft_calloc((nlen + 1) * sizeof(char), 1);
-	res[nlen--] = '\0';
-	while (num > 0)
+	if (!res)
+		return (NULL);
+	res[nlen] = '\0';
+	while (n > 0)
 	{
-		res[nlen] = "0123456789abcdef"[(num % 16)];
+		nlen--;
+		res[nlen] = "0123456789abcdef"[(n % 16)];
 		if (format == 'X' && (res[nlen] >= 'a' && res[nlen] <= 'f'))
 			res[nlen] -= 32;
-		num /= 16;
-		nlen--;
+		n /= 16;
 	}
 	return (res);
 }
@@ -69,7 +69,7 @@ int	ft_utoa_size(long nb)
 char	*ft_utoa(unsigned int n)
 {
 	unsigned int	nlen;
-	long			num;
+	unsigned int	num;
 	char			*res;
 
 	if (n == 0)
@@ -79,22 +79,12 @@ char	*ft_utoa(unsigned int n)
 	res = malloc((nlen + 1) * sizeof(char));
 	if (!res)
 		return (NULL);
-	res[nlen--] = '\0';
+	res[nlen] = '\0';
 	while (num > 0)
 	{
-		res[nlen--] = '0' + (num % 10);
+		nlen--;
+		res[nlen] = '0' + (num % 10);
 		num /= 10;
 	}
 	return (res);
-}
-
-char	*printf_s(const char *src)
-{
-	char	*dest;
-
-	if (src == NULL)
-		dest = ft_strdup("(null)");
-	else
-		dest = ft_strdup(src);
-	return (dest);
 }

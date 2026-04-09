@@ -1,14 +1,13 @@
 NAME = pipex
 
-CC = clang
+CFLAGS = -Wall -Wextra -Werror -g3 -I src
 
-CFLAGS = -Werror -Wextra -Wall -g
+SRC = src/main.c \
+	src/utils.c
 
-SRC = src/pipex.c src/ft_utils.c src/ft_token.c src/ft_strtrimtoken.c
+OBJETS = $(SRC:.c=.o)
 
-OBJS = $(SRC:.c=.o)
-
-LIBFTDIR = ./src/libft/
+LIBFT_DIR = ./src/libft/
 
 LIBFT = libft.a
 
@@ -20,32 +19,31 @@ MAGENTA=\033[1;35m
 CYAN=\033[1;36m
 WHITE=\033[1;37m
 
-$(NAME) : $(OBJS)
-	@make -s -C $(LIBFTDIR) --no-print-directory
-	@printf "\r\033[K🟡 ${YELLOW}[PIPEX] Compiling ${NAME}...${WHITE}\n"
-	@$(CC) $(OBJS) $(LIBFTDIR)$(LIBFT) -o $(NAME)
+$(NAME): $(LIBFT_DIR)$(LIBFT) $(OBJETS)
+	@printf "\r\033[K🟡 ${YELLOW}[PIPEX] Compiling pipex...${WHITE}\n"
+	@cc $(CFLAGS) -o $(NAME) $(OBJETS) $(LIBFT_DIR)$(LIBFT)
 	@printf "\r\033[K✅ ${GREEN}[PIPEX] Compiled !${WHITE}\n"
 
-all : $(NAME)
+$(LIBFT_DIR)$(LIBFT):
+	@make -s -C $(LIBFT_DIR) --no-print-directory
 
-libft:
-	make -s -C $(LIBFTDIR)
-
-.c.o :
+.c.o:
 	@printf "\r🟡 ${MAGENTA}[COMPILING📦] $<${WHITE}"
-	@$(CC) $(CFLAGS) -g -c -o $@ $<
+	@cc ${CFLAGS} -c $< -o $@
 
-clean :
-	@printf "🟡 ${MAGENTA}[CLEANING🧹] .o files...${WHITE}\n"
-	@rm -f $(OBJS)
+all: $(NAME)
+
+clean:
+	@printf "🟡 ${MAGENTA}[CLEANING🧹] pipex object files...${WHITE}\n"
+	@rm -f $(OBJETS) src/*.o
 	@printf "✅ ${GREEN}[CLEANED🧹]${WHITE}\n"
 
-fclean : clean
-	@printf "🟡 ${MAGENTA}[CLEANING🧹] libft...${WHITE}\n"
+fclean: clean
+	@printf "🟡 ${MAGENTA}[CLEANING🧹] libft and executable...${WHITE}\n"
+	@make -s -C $(LIBFT_DIR) fclean --no-print-directory
 	@rm -f $(NAME)
-	@make -s -C $(LIBFTDIR) fclean
 	@printf "✅ ${GREEN}[CLEANED🧹]${WHITE}\n"
 
-re : fclean all
+re: fclean all
 
-.PHONY : all clean fclean re
+.PHONY: all clean fclean re
