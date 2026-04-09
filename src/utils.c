@@ -6,16 +6,16 @@
 /*   By: masolet- <masolet-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 11:49:13 by masolet-          #+#    #+#             */
-/*   Updated: 2026/04/09 11:52:27 by masolet-         ###   ########.fr       */
+/*   Updated: 2026/04/09 14:46:09 by masolet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	ft_error(char *str)
+void	ft_printerror(char *str, int code)
 {
 	perror(str);
-	exit(1);
+	exit(code);
 }
 
 int	open_file(char *file, int in_or_out)
@@ -28,7 +28,7 @@ int	open_file(char *file, int in_or_out)
 	if (in_or_out == 1)
 		ret = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (ret == -1)
-		ft_error(file);
+		ft_printerror(file, 1);
 	return (ret);
 }
 
@@ -68,6 +68,13 @@ char	*get_path(char *cmd, char **env)
 	i = -1;
 	allpath = get_env_path(env);
 	s_cmd = ft_split(cmd, ' ');
+	if (!s_cmd)
+		return (NULL);
+	if (!allpath)
+	{
+		ft_free_tab(s_cmd);
+		return (NULL);
+	}
 	while (allpath[++i])
 	{
 		path_part = ft_strjoin(allpath[i], "/");
@@ -75,6 +82,7 @@ char	*get_path(char *cmd, char **env)
 		free(path_part);
 		if (access(exec, F_OK | X_OK) == 0)
 		{
+			ft_free_tab(allpath);
 			ft_free_tab(s_cmd);
 			return (exec);
 		}
